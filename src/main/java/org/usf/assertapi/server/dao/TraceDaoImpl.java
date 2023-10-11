@@ -48,14 +48,14 @@ public class TraceDaoImpl implements TraceDao {
         q.append(" ORDER BY E_ASR.ID_EXC DESC");
         var list = template.query(q.toString(), args.toArray(), (rs, i)-> {
             var stableApiExecution = new ExecutionInfo(
-                    rs.getTimestamp("DH_STB_STR").getTime(),
-                    rs.getTimestamp("DH_STB_END").getTime(),
+                    rs.getTimestamp("DH_STB_STR") != null ? rs.getTimestamp("DH_STB_STR").getTime() : 0,
+                    rs.getTimestamp("DH_STB_END") != null ? rs.getTimestamp("DH_STB_END").getTime() : 0,
                     rs.getInt("VA_STB_SIZ"),
                     rs.getInt("VA_STB_STT")
             );
             var latestApiExecution = new ExecutionInfo(
-                    rs.getTimestamp("DH_LTS_STR").getTime(),
-                    rs.getTimestamp("DH_LTS_END").getTime(),
+                    rs.getTimestamp("DH_LTS_STR") != null ? rs.getTimestamp("DH_LTS_STR").getTime() : 0,
+                    rs.getTimestamp("DH_LTS_END") != null ? rs.getTimestamp("DH_LTS_END").getTime() : 0,
                     rs.getInt("VA_LTS_SIZ"),
                     rs.getInt("VA_LTS_STT")
             );
