@@ -18,7 +18,7 @@ public class RequestServiceImpl implements RequestService {
     private final RequestDao dao;
 
     @Override
-    public List<ApiRequest> getRequestList(int[] ids, String app, Set<String> envs) {
+    public List<ApiRequest> getRequestList(long[] ids, String app, Set<String> envs) {
         return dao.selectRequest(ids, app, envs);
     }
 
@@ -28,8 +28,8 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public ApiRequest getRequestOne(int id) {
-        int[] ids = {id};
+    public ApiRequest getRequestOne(long id) {
+        long[] ids = {id};
         var requests = getRequestList(ids, null, null);
         if(requests == null || requests.isEmpty()) {
             throw new NotFoundException();
@@ -42,7 +42,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public long addRequest(String app, List<String> releases, ApiRequest req) {
-        int nextId = dao.nextId("ID_REQ", "O_REQ"); //TODO db column in service
+        long nextId = dao.nextId(); //TODO db column in service
         dao.insertRequest(nextId, req);
         dao.insertRequestGroup(nextId, app, releases);
         return nextId;
@@ -60,8 +60,8 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateRequest(int id, String app, List<String> releases, ApiRequest req) {
-        int[] ids = {id};
+    public void updateRequest(long id, String app, List<String> releases, ApiRequest req) {
+        long[] ids = {id};
         dao.updateRequest(id, req);
         dao.deleteRequestGroup(ids);
         dao.insertRequestGroup(id, app, releases);
@@ -69,14 +69,14 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void removeRequest(int[] ids){
+    public void removeRequest(long[] ids){
         dao.deleteRequest(ids);
         dao.deleteRequestGroup(ids);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateState(int[] ids, boolean state){
+    public void updateState(long[] ids, boolean state){
         dao.updateState(ids, state);
     }
 }

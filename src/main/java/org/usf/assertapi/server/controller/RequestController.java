@@ -21,7 +21,7 @@ public class RequestController {
 
     @GetMapping
     public List<ApiRequest> get(
-            @RequestParam(name="id", required = false) int[] ids,
+            @RequestParam(name="id", required = false) long[] ids,
             @RequestParam(name="app", required = false) String app,
             @RequestParam(name="env", required = false) Set<String> envs) {
         return service.getRequestList(ids, app, envs != null ? envs : new HashSet<>());
@@ -43,7 +43,7 @@ public class RequestController {
     }
 
     @PutMapping("import")
-    public long[] putImport(
+    public long[] put(
             @RequestParam(name="app") String app,
             @RequestParam(name="release") List<String> releases,
             @RequestBody List<ApiRequest> queries
@@ -61,17 +61,17 @@ public class RequestController {
     }
 
     @DeleteMapping
-    public void delete(@RequestParam("id") int[] ids) {
+    public void delete(@RequestParam("id") long[] ids) {
         service.removeRequest(ids);
     }
 
     @PatchMapping("enable")
-    public void enable(@RequestParam("id") int[] ids) {
+    public void enable(@RequestParam("id") long[] ids) {
         service.updateState(ids, true);
     }
 
     @PatchMapping("disable")
-    public void disable(@RequestParam("id") int[] ids) {
+    public void disable(@RequestParam("id") long[] ids) {
         service.updateState(ids, false);
     }
 }

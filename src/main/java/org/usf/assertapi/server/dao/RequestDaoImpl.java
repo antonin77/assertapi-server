@@ -34,7 +34,7 @@ public class RequestDaoImpl implements RequestDao {
     private final JdbcTemplate template;
 
     @Override
-    public List<ApiRequest> selectRequest(int[] ids, String app, Set<String> envs) {
+    public List<ApiRequest> selectRequest(long[] ids, String app, Set<String> envs) {
 
         List<Object> args = new LinkedList<>();
         StringBuilder q = new StringBuilder("SELECT DISTINCT O_REQ.ID_REQ, VA_URI, VA_MTH, VA_HDR, VA_BDY,"
@@ -58,7 +58,7 @@ public class RequestDaoImpl implements RequestDao {
 
         if(ids != null) {
             q.append(" WHERE O_REQ.ID_REQ IN ").append(inArgs(ids.length));
-            for (int id : ids) {
+            for (long id : ids) {
                 args.add(id);
             }
         }
@@ -110,7 +110,7 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public void insertRequest(int id, @NonNull ApiRequest req) {
+    public void insertRequest(long id, @NonNull ApiRequest req) {
 
         var q = "INSERT INTO O_REQ(ID_REQ, VA_URI, VA_MTH, VA_HDR, VA_BDY,"
                 + " VA_NME, VA_DSC, VA_VRS, VA_PRL, VA_ENB, VA_STT, CNT_CMP)"
@@ -137,7 +137,7 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public void updateRequest(int id, @NonNull ApiRequest req) {
+    public void updateRequest(long id, @NonNull ApiRequest req) {
 
         var q = "UPDATE O_REQ SET VA_URI = ?, VA_MTH = ?, VA_BDY = ?, VA_NME = ?, VA_DSC = ?,"
                 + " VA_HDR = ?, VA_VRS = ?, VA_PRL = ?, VA_ENB = ?, VA_STT = ?, CNT_CMP = ?"
@@ -164,7 +164,7 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public void deleteRequest(int[] ids){
+    public void deleteRequest(long[] ids){
         String q = "DELETE FROM O_REQ WHERE ID_REQ IN " + inArgs(ids.length);
         template.update(q, ps-> {
             for(var i=0; i<ids.length; i++) {
@@ -175,7 +175,7 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public void insertRequestGroup(int id, @NonNull String app, @NonNull List<String> releases) {
+    public void insertRequestGroup(long id, @NonNull String app, @NonNull List<String> releases) {
         var q = "INSERT INTO O_REQ_ENV(ID_REQ, VA_APP, VA_RLS)"
                 + " VALUES(?,?,?)";
         template.batchUpdate(q, releases, releases.size(), (ps, r) -> {
@@ -187,7 +187,7 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public void deleteRequestGroup(int[] ids) {
+    public void deleteRequestGroup(long[] ids) {
         String q = "DELETE FROM O_REQ_ENV WHERE ID_REQ IN " + inArgs(ids.length);
         template.update(q, ps-> {
             for(var i = 0; i < ids.length; i++) {
@@ -198,20 +198,20 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public void updateState(int[] ids, boolean state) {
+    public void updateState(long[] ids, boolean state) {
 
         String q = "UPDATE O_REQ SET VA_ENB = ? WHERE ID_REQ IN" + inArgs(ids.length);
         template.update(q, ps-> {
             ps.setBoolean(1, state);
             for(var i=0; i<ids.length; i++) {
-                ps.setInt(i+2, ids[i]);
+                ps.setLong(i+2, ids[i]);
             }
         });
     }
 
     @Override
-    public Integer nextId(@NonNull String col, @NonNull String table) {
-        return requireNonNull(template.query("SELECT MAX(" + col + ") FROM " + table,
-                rs-> rs.next() ? rs.getInt(1) : 0)) + 1;
+    public long nextId() {
+        return requireNonNull(template.query("SELECT MAX(ID_REQ) FROM O_REQ",
+                rs-> rs.next() ? rs.getLong(1) : 0)) + 1;
     }
 }

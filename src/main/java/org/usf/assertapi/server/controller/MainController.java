@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.IntStream.of;
+import static java.util.stream.LongStream.of;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.usf.assertapi.core.RuntimeEnvironement.build;
 
@@ -79,7 +79,7 @@ public class MainController {
 			@RequestParam(name="app") String app,
 			@RequestParam(name="latest_release") String latestRelease,
 			@RequestParam(name="stable_release") String stableRelease,
-			@RequestParam(name="id", required = false) int[] ids,
+			@RequestParam(name="id", required = false) long[] ids,
 			@RequestParam(name="excluded", required = false) boolean excluded,
 			@RequestBody Configuration config
 	) {
@@ -136,7 +136,7 @@ public class MainController {
 		return id;
 	}*/
 
-	private List<ApiRequest> requests(String app, String latestRelease, String stableRelease, int[] ids, boolean excluded) {
+	private List<ApiRequest> requests(String app, String latestRelease, String stableRelease, long[] ids, boolean excluded) {
 
 		Set<String> envs = new HashSet<>(asList(latestRelease, stableRelease));
 		var list = requestController.get(!excluded ? ids : null, app, envs);

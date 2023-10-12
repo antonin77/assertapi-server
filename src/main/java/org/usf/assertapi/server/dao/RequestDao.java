@@ -8,21 +8,21 @@ import java.util.Set;
 
 public interface RequestDao {
 
-    List<ApiRequest> selectRequest(int[] ids, String app, Set<String> envs);
+    List<ApiRequest> selectRequest(long[] ids, String app, Set<String> envs);
 
     List<ApiRequestServer> selectRequest();
 
-    void insertRequest(int id, ApiRequest req);
+    void insertRequest(long id, ApiRequest req);
 
-    void updateRequest(int id, ApiRequest req);
+    void updateRequest(long id, ApiRequest req);
 
-    void deleteRequest(int[] ids);
+    void deleteRequest(long[] ids);
 
-    void insertRequestGroup(int id, String app, List<String> releases);
+    void insertRequestGroup(long id, String app, List<String> releases);
 
-    void deleteRequestGroup(int[] ids);
+    void deleteRequestGroup(long[] ids);
 
-    void updateState(int[] ids, boolean state);
+    void updateState(long[] ids, boolean state);
 
-    Integer nextId(String col, String table);
+    long nextId();
 }

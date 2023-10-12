@@ -7,19 +7,19 @@ import java.util.List;
 import java.util.Set;
 
 public interface RequestService {
-    List<ApiRequest> getRequestList(int[] ids, String app, Set<String> envs);
+    List<ApiRequest> getRequestList(long[] ids, String app, Set<String> envs);
 
     List<ApiRequestServer> getRequestList();
 
-    ApiRequest getRequestOne(int id);
+    ApiRequest getRequestOne(long id);
 
     long addRequest(String app, List<String> releases, ApiRequest req);
 
     long[] addRequestList(String app, List<String> releases, List<ApiRequest> requests);
 
-    void updateRequest(int id, String app, List<String> releases, ApiRequest req);
+    void updateRequest(long id, String app, List<String> releases, ApiRequest req);
 
-    void removeRequest(int[] ids);
+    void removeRequest(long[] ids);
 
-    void updateState(int[] ids, boolean state);
+    void updateState(long[] ids, boolean state);
 }
